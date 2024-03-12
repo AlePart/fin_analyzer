@@ -4,6 +4,7 @@ class FinSeriesData:
     def __init__(self):
         self.dates  : list[datetime.datetime] = [] 
         self.values = []
+        self.name = ""
 
     def add(self, date, value):
         self.dates.append(date)
