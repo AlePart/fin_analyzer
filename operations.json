@@ -1,0 +1,23 @@
+[
+    {
+        "ticker": "ENWD.MI",
+        "operation": "buy",
+        "quantity": 21,
+        "price": 6.9138,
+        "date": "2023-12-04"
+    },
+    {
+        "ticker": "XXSC.MI",
+        "operation": "buy",
+        "quantity": 6,
+        "price": 56.0,
+        "date": "2024-15-03"
+    },
+    {
+        "ticker": "LCJP.MI",
+        "operation": "buy",
+        "quantity": 21,
+        "price": 16.56,
+        "date": "2024-1-03"
+    }
+]

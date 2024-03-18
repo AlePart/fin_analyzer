@@ -6,35 +6,37 @@ from finstat import FinSeries
 from finstat import FinSeriesData
 import random
 import finstat.Stats as Stats
+import yfinance as yf
+import json
 
 
 if __name__ == "__main__":
+
+    operations_file = "operations.json"
+    file = open(operations_file, "r")
+    operations = json.load(file)
+    file.close()
+    all_data = dict()
+
+    for operation in operations:
+        all_data[operation["ticker"]] = yf.download(operation["ticker"])
+
+    print(all_data)
+    
+    common_start_date = dt.datetime(1970, 1, 1)
     ser = FinSeries()
-    data1 = FinSeriesData()
-    data1.name = "data1"
-    data2 = FinSeriesData()
-    data2.name = "data2"
-    data3 = FinSeriesData()
-    data3.name = "data3"
+    for( key, value) in all_data.items():
+        if(common_start_date < value[0:1].index[0]):
+            common_start_date = value[0:1].index[0]
 
-    for j in range(1000):
-        now = dt.datetime.now()
-        now = now - dt.timedelta(days=j)
-        data1.add(now.date(),  j)
-    for j in range(1000):
-        now = dt.datetime.now()
-        now = now - dt.timedelta(days=j)
-        data2.add(now.date(),  random.randint(0, 10))
-    
-    for j in range(1400):
-        now = dt.datetime.now()
-        now = now - dt.timedelta(days=j)
-        data3.add(now.date(),  random.randint(-30, 40))
-    
+    for( key, value) in all_data.items():
+        data1 = FinSeriesData()
+        data1.name = key
+        for index, row in value.iterrows():
+            data1.add(index.date(), row["Close"])
+        ser.addData(data1)
 
-
-    ser.addData(data1)
-    ser.addData(data2)
-    ser.addData(data3)
     Stats.corr(ser.getData())
+    
+
 
