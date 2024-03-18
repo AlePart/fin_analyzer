@@ -19,8 +19,12 @@ def corr(data : list[FinSeriesData]):
     dataframes = dataframes.set_index('dates')
    # print(dataframes)
     corr = dataframes.corr()
+    plt.figure()
     sns.heatmap(corr, annot=True)
-    plt.show()
+    
+
+
+
 
 
 def mean(data: FinSeriesData):
@@ -49,6 +53,9 @@ def var(data: FinSeriesData):
 
 def std(data: FinSeriesData):
     return var(data) ** 0.5
+
+
+
     
 
         

@@ -11,13 +11,13 @@
         "operation": "buy",
         "quantity": 6,
         "price": 56.0,
-        "date": "2024-15-03"
+        "date": "2024-01-15"
     },
     {
         "ticker": "LCJP.MI",
         "operation": "buy",
-        "quantity": 21,
+        "quantity": 10,
         "price": 16.56,
-        "date": "2024-1-03"
+        "date": "2023-06-03"
     }
 ]
