@@ -21,6 +21,7 @@ def corr(data : list[FinSeriesData]):
     corr = dataframes.corr()
     plt.figure()
     sns.heatmap(corr, annot=True)
+    plt.title("Correlation")
     
 
 

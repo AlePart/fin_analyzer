@@ -49,6 +49,7 @@ def invested_pie(operations):
 
     plt.figure()
     plt.pie(perc.values(), labels=perc.keys(), autopct='%1.1f%%')
+    plt.title("Allocation")
 
 def get_buy_or_open_price(operation):
     if "price" in operation :
@@ -57,6 +58,7 @@ def get_buy_or_open_price(operation):
         
         market_data = yf.download(operation["ticker"], start=operation["date"] , end=dt.date.fromisoformat(operation['date']) + dt.timedelta(days=1))
         return  market_data["Open"].iloc[0]
+    
 
 
 def portfolio_gains(operations):
@@ -83,6 +85,7 @@ def portfolio_gains(operations):
     sns.lineplot(data=dataframes, x=dataframes.index, y=dataframes.sum(axis=1))
     plt.ylabel("Gains (%)")
     plt.xlabel("Date")
+    plt.title("Portfolio Gains")
 
 def get_position_data(operations):
     position_data = dict()
@@ -116,6 +119,7 @@ def portfolio_history(operations):
     sns.lineplot(data=dataframes, x=dataframes.index, y=dataframes.sum(axis=1))
     plt.ylabel("Portfolio Value")
     plt.xlabel("Date")
+    plt.title("Portfolio History")
     
 
 if __name__ == "__main__":
