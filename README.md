@@ -70,4 +70,16 @@ specifica se desideri per il tuo ticker il prezzo di chiusura o il prezzo di chi
     python fin_analyzer.py
     ```
 
+## TODO
+- [ ] Aggiungere una riepilogo delle operazioni con relativi gain/loss
+- [ ] Aggiungere la possibilità di vendere asset e calcolare il gain/loss
+- [ ] Aggiungere la possibilità di inserire liquidità
+- [ ] Aggiungere la possibilità di inserire conti deposito
+- [ ] Aggiungere la possibilita di inserire obbligazioni
+- [ ] Calcolo delle tasse
+- [ ] Aggiungere Euribor e indici
+- [ ] Aggiungere la possibilità esportare grafici
+
+
+
 
