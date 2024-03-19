@@ -1,44 +1,44 @@
 [
     {
         "ticker": "LCJP.MI",
-        "adj_close": false,
+        "adj_close": true,
         "quantity": 100,
         "date": "2022-01-04"
     },
     {
         "ticker": "IMEU.MI",
-        "adj_close": false,
+        "adj_close": true,
         "quantity": 50,
         "date": "2022-01-04"
     },
     {
         "ticker": "INAA.MI",
-        "adj_close": false,
+        "adj_close": true,
         "quantity": 20,
         "date": "2022-01-04"
     },
     {
         "ticker": "XMME.MI",
-        "adj_close": false,
+        "adj_close": true,
         "quantity": 30,
         "date": "2022-01-04"
     },
     {
         "ticker": "INAA.MI",
-        "adj_close": false,
+        "adj_close": true,
         "quantity": 5,
         "date": "2022-06-06"
     },
     {
         "ticker": "SGLD.MI",
-        "adj_close": false,
+        "adj_close": true,
         "quantity": 10,
         "date": "2022-01-04"
     },
     {
         "ticker": "INAA.MI",
-        "adj_close": false,
-        "quantity": 5,
+        "adj_close": true,
+        "quantity": 15,
         "date": "2023-01-14"
     }
    

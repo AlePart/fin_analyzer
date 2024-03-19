@@ -147,7 +147,21 @@ def check_operations(operations) :
             return False
     print("*** Operations are correct ***")
 
-
+def current_assets_gain_loss_perc(operations, filename = ""):
+    gain_loss = dict()
+    for operation in operations:
+        market_data = yf.download(operation["ticker"], start=operation["date"] , end=dt.datetime.now()- dt.timedelta(days=1))
+        if operation["adj_close"] == True:
+            gain_loss[operation["ticker"]] = (market_data["Adj Close"].iloc[-1] - get_buy_or_open_price(operation)) / get_buy_or_open_price(operation) * 100
+        else:
+            gain_loss[operation["ticker"]] = (market_data["Close"].iloc[-1] - get_buy_or_open_price(operation)) / get_buy_or_open_price(operation) * 100
+    
+    plt.figure("Current Assets Gain/Loss - " + filename)
+    sns.barplot(x=list(gain_loss.keys()), y=list(gain_loss.values()))
+    plt.ylabel("Gain/Loss")
+    plt.xlabel("Ticker")
+    plt.title("Current Assets Gain/Loss")
+    
 if __name__ == "__main__":
 
     operations_files = []
@@ -170,6 +184,7 @@ if __name__ == "__main__":
         invested_pie(operations, file.name)
         portfolio_history(operations, file.name)
         portfolio_gains(operations, file.name)
+        current_assets_gain_loss_perc(operations, file.name)
 
     plt.show(block=False)
 
