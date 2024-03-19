@@ -57,8 +57,9 @@ def get_buy_or_open_price(operation):
         return operation["price"]
     else:
         
-        market_data = yf.download(operation["ticker"], start=operation["date"] , end=dt.date.fromisoformat(operation['date']) + dt.timedelta(days=1))
-        return  market_data["Open"].iloc[0]
+        market_data = yf.download(operation["ticker"], start=operation["date"] , end=dt.date.fromisoformat(operation['date']) + dt.timedelta(days=30))
+
+        return market_data["Open"].iloc[0]
     
 
 
