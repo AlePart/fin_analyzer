@@ -17,11 +17,17 @@ def corr(data : list[FinSeriesData], filename = ""):
             dataframes = pd.merge(dataframes, df_temp, on='dates', how='outer')
     
     dataframes = dataframes.set_index('dates')
-   # print(dataframes)
     corr = dataframes.corr()
     plt.figure("Correlation Matrix - " + filename)
-    sns.heatmap(corr, annot=True)
+    sns.heatmap(corr, annot=True,cmap='coolwarm',linewidths=0.5)
     plt.title("Correlation")
+    
+    return corr
+    
+
+
+
+
     
 
 

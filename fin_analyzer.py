@@ -16,6 +16,7 @@ import sys
 
 
 
+
 def correlation(operations : json, filename = ""):
     all_data = dict()
     for operation in operations:
@@ -34,7 +35,7 @@ def correlation(operations : json, filename = ""):
             data1.add(index.date(), row["Adj Close"])
         ser.addData(data1)
 
-    Stats.corr(ser.getData(), filename)
+    return Stats.corr(ser.getData(), filename)
 
 def invested_pie(operations, filename = ""):
     invested = 0
@@ -51,6 +52,7 @@ def invested_pie(operations, filename = ""):
     plt.figure("Allocation - " + filename)
     plt.pie(perc.values(), labels=perc.keys(), autopct='%1.1f%%')
     plt.title("Allocation")
+    return perc
 
 def get_buy_or_open_price(operation):
     if "price" in operation :
@@ -162,6 +164,22 @@ def current_assets_gain_loss_perc(operations, filename = ""):
     plt.xlabel("Ticker")
     plt.title("Current Assets Gain/Loss")
     
+def calculate_weighted_correlation(file, corr, percentage):
+    weighted_corr = corr.copy()
+        
+    for key, value in percentage.items():
+        weighted_corr.loc[key] = weighted_corr.loc[key] * value
+        weighted_corr.loc[:, key] = weighted_corr.loc[:, key] * value
+     
+    for key, value in percentage.items():
+        weighted_corr.loc[key, key] =  weighted_corr.loc[key].mean()
+
+    plt.figure("Weighted Correlation - " + file.name)
+    sns.heatmap(weighted_corr, annot=True,linewidths=0.5, cmap='coolwarm', fmt=".2f")
+    plt.title("Weighted Correlation")
+
+
+
 if __name__ == "__main__":
 
     operations_files = []
@@ -180,8 +198,10 @@ if __name__ == "__main__":
         if check_operations(operations) == False:
             exit(1)
 
-        correlation(operations, file.name)
-        invested_pie(operations, file.name)
+        corr = correlation(operations, file.name)
+    
+        percentage = invested_pie(operations, file.name)
+        calculate_weighted_correlation(file, corr, percentage)
         portfolio_history(operations, file.name)
         portfolio_gains(operations, file.name)
         current_assets_gain_loss_perc(operations, file.name)
