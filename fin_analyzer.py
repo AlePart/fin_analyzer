@@ -165,7 +165,12 @@ if __name__ == "__main__":
         portfolio_history(operations, file.name)
         portfolio_gains(operations, file.name)
 
-        plt.show()
+    plt.show(block=False)
+
+    input("Press Enter to continue...")
+    plt.close("all")
+
+    
 
 
     
