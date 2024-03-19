@@ -35,13 +35,6 @@ def correlation(operations : json):
 
     Stats.corr(ser.getData())
 
-    
-
-
-
-
-    
-
 def invested_pie(operations):
     invested = 0
     
@@ -64,7 +57,6 @@ def get_buy_or_open_price(operation):
         
         market_data = yf.download(operation["ticker"], start=operation["date"] , end=dt.date.fromisoformat(operation['date']) + dt.timedelta(days=1))
         return  market_data["Open"].iloc[0]
-
 
 
 def portfolio_gains(operations):
