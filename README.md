@@ -26,7 +26,7 @@ Fin Analyzer è un programma che consente di analizzare un portafoglio utilizzan
 
 1. Modifica il file `operations.json` con i tuoi dati di acquisto. Il file deve avere la seguente struttura:
     
-        ```json
+    ```json
         {
             "ticker": "ENWD.MI",
             "adj_close": true,
