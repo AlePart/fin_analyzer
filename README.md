@@ -70,6 +70,10 @@ specifica se desideri per il tuo ticker il prezzo di chiusura o il prezzo di chi
     python fin_analyzer.py
     ```
 
+    ```bash
+    python fin_analyzer.py portfolio.json
+    ```
+
 ## TODO
 - [x] Controllo file operations.json
 - [x] Aggiungere la possibilità di utilizzare file json con nomi diversi
