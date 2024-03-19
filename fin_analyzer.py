@@ -144,23 +144,29 @@ def check_operations(operations) :
 
 if __name__ == "__main__":
 
+    operations_files = []
     if len(sys.argv) > 1:
-        operations_file = sys.argv[1]
+        for arg in sys.argv[1:]:
+
+            operations_files.append(arg)
     else:
-        operations_file = "operations.json"
+        operations_files.append("operations.json")
 
-    file = open(operations_file, "r")
-    operations = json.load(file)
-    file.close()
-    if check_operations(operations) == False:
-        exit(1)
+    for file in operations_files:
+        print("Processing file: " + file)
+        file = open(file, "r")
+        operations = json.load(file)
+        file.close()
+        if check_operations(operations) == False:
+            exit(1)
 
-    correlation(operations)
-    invested_pie(operations)
-    portfolio_history(operations)
-    portfolio_gains(operations)
+        correlation(operations)
+        invested_pie(operations)
+        portfolio_history(operations)
+        portfolio_gains(operations)
 
-    plt.show()
+        plt.show()
+
 
     
 
