@@ -1,38 +1,34 @@
 [
     {
-        "ticker": "ENWD.MI",
-        "adj_close": true,
-        "quantity": 21,
-        "price": 6.9138,
-        "date": "2023-12-04"
-    },
-    {
-        "ticker": "XXSC.MI",
-        "adj_close": true,
-        "quantity": 6,
-        "price": 56.0,
-        "date": "2024-01-15"
-    },
-    {
-        "ticker": "ENWD.MI",
-        "adj_close": true,
-        "quantity": 50,
-        "price": 6.74,
-        "date": "2023-10-16"
-    },
-    {
-        "ticker": "LCAS.MI",
-        "adj_close": true,
-        "quantity": 10,
-        "price": 10.57,
-        "date": "2021-08-27"
-    },
-    {
-        "ticker": "GOLD.AS",
+        "ticker": "LCJP.MI",
         "adj_close": false,
-        "quantity": 5,
-      
-        "date": "2023-10-30"
+        "quantity": 100,
+        "date": "2022-01-04"
+    },
+    {
+        "ticker": "IMEU.MI",
+        "adj_close": false,
+        "quantity": 50,
+        "date": "2022-01-04"
+    },
+    {
+        "ticker": "INAA.MI",
+        "adj_close": false,
+        "quantity": 20,
+        "date": "2022-01-04"
+    },
+    {
+        "ticker": "XMME.MI",
+        "adj_close": false,
+        "quantity": 30,
+        "date": "2022-01-04"
+    },
+    {
+        "ticker": "SGLD.MI",
+        "adj_close": false,
+        "quantity": 10,
+        "date": "2022-01-04"
     }
+   
 
 ]

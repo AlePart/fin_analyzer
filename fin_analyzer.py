@@ -67,11 +67,11 @@ def portfolio_gains(operations, filename = ""):
     position_data = get_position_data(operations)
 
     dataframes = pd.DataFrame()
-    for _, value in position_data.items():
+    for key, value in position_data.items():
         if dataframes.empty:
-            dataframes = pd.DataFrame({'dates': value.index, value.name: value.values})
+            dataframes = pd.DataFrame({'dates': value.index, key: value.values})
         else:
-            df_temp = pd.DataFrame({'dates': value.index, value.name: value.values})
+            df_temp = pd.DataFrame({'dates': value.index, key: value.values})
             dataframes = pd.merge(dataframes, df_temp, on='dates', how='outer')
 
     dataframes = dataframes.set_index('dates')
@@ -87,6 +87,7 @@ def portfolio_gains(operations, filename = ""):
     plt.ylabel("Gains (%)")
     plt.xlabel("Date")
     plt.title("Portfolio Gains")
+
 
 def get_position_data(operations):
     position_data = dict()
@@ -108,12 +109,16 @@ def get_position_data(operations):
 def portfolio_history(operations, filename = ""):
     position_data = get_position_data(operations)
     dataframes = pd.DataFrame()
-    for _, value in position_data.items():
+  
+
+    for key, value in position_data.items():    
         if dataframes.empty:
-            dataframes = pd.DataFrame({'dates': value.index, value.name: value.values})
+            dataframes = pd.DataFrame({'dates': value.index, key: value.values})
         else:
-            df_temp = pd.DataFrame({'dates': value.index, value.name: value.values})
+            df_temp = pd.DataFrame({'dates': value.index, key: value.values})
             dataframes = pd.merge(dataframes, df_temp, on='dates', how='outer')
+      
+     
     
     plt.figure("Portfolio History - " + filename)
     dataframes = dataframes.set_index('dates')
