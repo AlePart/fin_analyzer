@@ -48,7 +48,7 @@ def invested_pie(operations):
     for operation in operations:
         perc[operation["ticker"]] = operation["quantity"] * get_buy_or_open_price(operation) / invested * 100
 
-    plt.figure()
+    plt.figure("Allocation")
     plt.pie(perc.values(), labels=perc.keys(), autopct='%1.1f%%')
     plt.title("Allocation")
 
@@ -82,7 +82,7 @@ def portfolio_gains(operations):
     dataframes = dataframes - 1
     dataframes = dataframes * 100
 
-    plt.figure()
+    plt.figure("Gains %")
     sns.lineplot(data=dataframes, x=dataframes.index, y=dataframes.sum(axis=1))
     plt.ylabel("Gains (%)")
     plt.xlabel("Date")
@@ -115,7 +115,7 @@ def portfolio_history(operations):
             df_temp = pd.DataFrame({'dates': value.index, value.name: value.values})
             dataframes = pd.merge(dataframes, df_temp, on='dates', how='outer')
     
-    plt.figure()
+    plt.figure("Portfolio History")
     dataframes = dataframes.set_index('dates')
     sns.lineplot(data=dataframes, x=dataframes.index, y=dataframes.sum(axis=1))
     plt.ylabel("Portfolio Value")

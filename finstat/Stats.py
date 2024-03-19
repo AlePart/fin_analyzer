@@ -19,7 +19,7 @@ def corr(data : list[FinSeriesData]):
     dataframes = dataframes.set_index('dates')
    # print(dataframes)
     corr = dataframes.corr()
-    plt.figure()
+    plt.figure("Correlation Matrix")
     sns.heatmap(corr, annot=True)
     plt.title("Correlation")
     
