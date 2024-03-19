@@ -15,7 +15,7 @@ import pandas as pd
 
 
 
-def printCorrelation(operations : json):
+def correlation(operations : json):
     all_data = dict()
     for operation in operations:
         all_data[operation["ticker"]] = yf.download(operation["ticker"])
@@ -42,33 +42,34 @@ def printCorrelation(operations : json):
 
     
 
-if __name__ == "__main__":
-
-    operations_file = "operations.json"
-    file = open(operations_file, "r")
-    operations = json.load(file)
-    file.close()
-
-    printCorrelation(operations)
+def invested_pie(operations):
     invested = 0
+    
     for operation in operations:
-        invested += operation["quantity"] * operation["price"]
+        price = get_buy_or_open_price(operation)
+        invested += operation["quantity"] * price
+            
 
     perc = dict()
     for operation in operations:
-        perc[operation["ticker"]] = operation["quantity"] * operation["price"] / invested * 100
+        perc[operation["ticker"]] = operation["quantity"] * get_buy_or_open_price(operation) / invested * 100
 
     plt.figure()
     plt.pie(perc.values(), labels=perc.keys(), autopct='%1.1f%%')
- 
+
+def get_buy_or_open_price(operation):
+    if "price" in operation :
+        return operation["price"]
+    else:
+        
+        market_data = yf.download(operation["ticker"], start=operation["date"] , end=dt.date.fromisoformat(operation['date']) + dt.timedelta(days=1))
+        return  market_data["Open"].iloc[0]
 
 
-    #portfolio history
-    position_data = dict()
-    for operation in operations:
-        print(operation["date"])
-        market_data = yf.download(operation["ticker"], start=operation["date"])
-        position_data[operation["ticker"]] = market_data["Adj Close"] * operation["quantity"]
+
+def portfolio_gains(operations):
+
+    position_data = get_position_data(operations)
 
     dataframes = pd.DataFrame()
     for _, value in position_data.items():
@@ -77,12 +78,66 @@ if __name__ == "__main__":
         else:
             df_temp = pd.DataFrame({'dates': value.index, value.name: value.values})
             dataframes = pd.merge(dataframes, df_temp, on='dates', how='outer')
-    
-    print(dataframes.info())
 
+    dataframes = dataframes.set_index('dates')
+    dataframes = dataframes.pct_change()
+    dataframes = dataframes.fillna(0)
+    dataframes = dataframes + 1
+    dataframes = dataframes.cumprod()
+    dataframes = dataframes - 1
+    dataframes = dataframes * 100
+
+    plt.figure()
+    sns.lineplot(data=dataframes, x=dataframes.index, y=dataframes.sum(axis=1))
+    plt.ylabel("Gains (%)")
+    plt.xlabel("Date")
+
+def get_position_data(operations):
+    position_data = dict()
+    for operation in operations:
+        market_data = yf.download(operation["ticker"], start=operation["date"] , end=dt.datetime.now()- dt.timedelta(days=1))
+            
+        if operation["adj_close"] == True:
+            position_data[operation["ticker"]] = market_data["Adj Close"] * operation["quantity"]
+        else:
+            position_data[operation["ticker"]] = market_data["Close"] * operation["quantity"]
+
+    if "price" in operation :  
+        position_data[operation["ticker"]].iloc[0] = operation["price"] * operation["quantity"]
+
+            
+    return position_data
+
+
+def portfolio_history(operations):
+    position_data = get_position_data(operations)
+    dataframes = pd.DataFrame()
+    for _, value in position_data.items():
+        if dataframes.empty:
+            dataframes = pd.DataFrame({'dates': value.index, value.name: value.values})
+        else:
+            df_temp = pd.DataFrame({'dates': value.index, value.name: value.values})
+            dataframes = pd.merge(dataframes, df_temp, on='dates', how='outer')
+    
     plt.figure()
     dataframes = dataframes.set_index('dates')
     sns.lineplot(data=dataframes, x=dataframes.index, y=dataframes.sum(axis=1))
+    plt.ylabel("Portfolio Value")
+    plt.xlabel("Date")
+    
+
+if __name__ == "__main__":
+
+    operations_file = "operations.json"
+    file = open(operations_file, "r")
+    operations = json.load(file)
+    file.close()
+
+    correlation(operations)
+    invested_pie(operations)
+    portfolio_history(operations)
+    portfolio_gains(operations)
+
     plt.show()
 
     
