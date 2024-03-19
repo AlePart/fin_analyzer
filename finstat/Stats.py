@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 
-def corr(data : list[FinSeriesData]):
+def corr(data : list[FinSeriesData], filename = ""):
 
     dataframes = pd.DataFrame()
     for d in data:
@@ -19,7 +19,7 @@ def corr(data : list[FinSeriesData]):
     dataframes = dataframes.set_index('dates')
    # print(dataframes)
     corr = dataframes.corr()
-    plt.figure("Correlation Matrix")
+    plt.figure("Correlation Matrix - " + filename)
     sns.heatmap(corr, annot=True)
     plt.title("Correlation")
     

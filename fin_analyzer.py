@@ -16,7 +16,7 @@ import sys
 
 
 
-def correlation(operations : json):
+def correlation(operations : json, filename = ""):
     all_data = dict()
     for operation in operations:
         all_data[operation["ticker"]] = yf.download(operation["ticker"])
@@ -34,9 +34,9 @@ def correlation(operations : json):
             data1.add(index.date(), row["Adj Close"])
         ser.addData(data1)
 
-    Stats.corr(ser.getData())
+    Stats.corr(ser.getData(), filename)
 
-def invested_pie(operations):
+def invested_pie(operations, filename = ""):
     invested = 0
     
     for operation in operations:
@@ -48,7 +48,7 @@ def invested_pie(operations):
     for operation in operations:
         perc[operation["ticker"]] = operation["quantity"] * get_buy_or_open_price(operation) / invested * 100
 
-    plt.figure("Allocation")
+    plt.figure("Allocation - " + filename)
     plt.pie(perc.values(), labels=perc.keys(), autopct='%1.1f%%')
     plt.title("Allocation")
 
@@ -62,7 +62,7 @@ def get_buy_or_open_price(operation):
     
 
 
-def portfolio_gains(operations):
+def portfolio_gains(operations, filename = ""):
 
     position_data = get_position_data(operations)
 
@@ -82,7 +82,7 @@ def portfolio_gains(operations):
     dataframes = dataframes - 1
     dataframes = dataframes * 100
 
-    plt.figure("Gains %")
+    plt.figure("Portfolio Gains - " + filename)
     sns.lineplot(data=dataframes, x=dataframes.index, y=dataframes.sum(axis=1))
     plt.ylabel("Gains (%)")
     plt.xlabel("Date")
@@ -105,7 +105,7 @@ def get_position_data(operations):
     return position_data
 
 
-def portfolio_history(operations):
+def portfolio_history(operations, filename = ""):
     position_data = get_position_data(operations)
     dataframes = pd.DataFrame()
     for _, value in position_data.items():
@@ -115,7 +115,7 @@ def portfolio_history(operations):
             df_temp = pd.DataFrame({'dates': value.index, value.name: value.values})
             dataframes = pd.merge(dataframes, df_temp, on='dates', how='outer')
     
-    plt.figure("Portfolio History")
+    plt.figure("Portfolio History - " + filename)
     dataframes = dataframes.set_index('dates')
     sns.lineplot(data=dataframes, x=dataframes.index, y=dataframes.sum(axis=1))
     plt.ylabel("Portfolio Value")
@@ -160,10 +160,10 @@ if __name__ == "__main__":
         if check_operations(operations) == False:
             exit(1)
 
-        correlation(operations)
-        invested_pie(operations)
-        portfolio_history(operations)
-        portfolio_gains(operations)
+        correlation(operations, file.name)
+        invested_pie(operations, file.name)
+        portfolio_history(operations, file.name)
+        portfolio_gains(operations, file.name)
 
         plt.show()
 
