@@ -122,12 +122,31 @@ def portfolio_history(operations):
     plt.title("Portfolio History")
     
 
+def check_operations(operations) :
+    for operation in operations:
+        print(operation)
+        if "date" not in operation:
+            print("Error: Operation must have a date")
+            return False
+        if "ticker" not in operation:
+            print("Error: Operation must have a ticker")
+            return False
+        if "quantity" not in operation:
+            print("Error: Operation must have a quantity")
+            return False
+        if "adj_close" not in operation:
+            print("Error: Operation must have a adj_close flag")
+            return False
+
+
 if __name__ == "__main__":
 
     operations_file = "operations.json"
     file = open(operations_file, "r")
     operations = json.load(file)
     file.close()
+    if check_operations(operations) == False:
+        exit(1)
 
     correlation(operations)
     invested_pie(operations)
