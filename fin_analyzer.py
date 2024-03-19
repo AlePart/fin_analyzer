@@ -11,6 +11,7 @@ import json
 import seaborn as sns
 import matplotlib.pyplot as plt
 import pandas as pd
+import sys
 
 
 
@@ -123,6 +124,7 @@ def portfolio_history(operations):
     
 
 def check_operations(operations) :
+    print("*** Verifying operations ***")
     for operation in operations:
         print(operation)
         if "date" not in operation:
@@ -137,11 +139,16 @@ def check_operations(operations) :
         if "adj_close" not in operation:
             print("Error: Operation must have a adj_close flag")
             return False
+    print("*** Operations are correct ***")
 
 
 if __name__ == "__main__":
 
-    operations_file = "operations.json"
+    if len(sys.argv) > 1:
+        operations_file = sys.argv[1]
+    else:
+        operations_file = "operations.json"
+
     file = open(operations_file, "r")
     operations = json.load(file)
     file.close()

@@ -72,7 +72,7 @@ specifica se desideri per il tuo ticker il prezzo di chiusura o il prezzo di chi
 
 ## TODO
 - [x] Controllo file operations.json
-- [ ] Aggiungere la possibilità di utilizzare file json con nomi diversi
+- [x] Aggiungere la possibilità di utilizzare file json con nomi diversi
 - [ ] Aggiungere la possibilità di utilizzare piu file json
 - [ ] Aggiungere una riepilogo delle operazioni con relativi gain/loss
 - [ ] Aggiungere la possibilità di vendere asset e calcolare il gain/loss
