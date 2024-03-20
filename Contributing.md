@@ -31,7 +31,7 @@ Benvenuto nel progetto FIN ANALYZER ! Siamo felici che tu voglia contribuire. Se
     git push origin [nome-del-tuo-branch]
     ```
 
-8. Apri una pull request sul repository originale [Nome del repository].
+8. Apri una pull request sul repository originale.
 
 ## Linee guida per la pull request
 
