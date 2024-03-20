@@ -234,13 +234,13 @@ if __name__ == "__main__":
             if check_operations(operations) == False:
                 exit(1)
 
-        corr = correlation(operations, file.name)
-        percentage = invested_pie(operations, file.name)
-        calculate_weighted_correlation(file, corr, percentage)
-        portfolio_history(operations, file.name)
-        portfolio_gains(operations, file.name)
-        current_assets_gain_loss_perc(operations, file.name)
-        assets_history = assets_history_perc(operations, file.name)
+        corr = correlation(operations, f.name)
+        percentage = invested_pie(operations, f.name)
+        calculate_weighted_correlation(f, corr, percentage)
+        portfolio_history(operations, f.name)
+        portfolio_gains(operations, f.name)
+        current_assets_gain_loss_perc(operations, f.name)
+        assets_history = assets_history_perc(operations, f.name)
 
 
     plt.show(block=False)
