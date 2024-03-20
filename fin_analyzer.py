@@ -9,7 +9,7 @@ import sys
 from finstat import FinSeriesData
 from finstat import FinSeries
 from finstat import settings
-from finstat import stats
+from finstat import statistics
 
 
 def correlation(operations: json, filename=""):
@@ -30,7 +30,7 @@ def correlation(operations: json, filename=""):
             data1.add(index.date(), row["Adj Close"])
         ser.addData(data1)
 
-    return stats.corr(ser.getData(), filename)
+    return statistics.corr(ser.getData(), filename)
 
 
 def invested_pie(operations, filename=""):
@@ -137,6 +137,7 @@ def portfolio_history(operations, filename=""):
     plt.ylabel("Portfolio Value")
     plt.xlabel("Date")
     plt.title("Portfolio History")
+    return dataframes
 
 
 def check_operations(operations: list[dict]) -> bool:
@@ -189,9 +190,11 @@ def calculate_weighted_correlation(file, corr, percentage):
 
     plt.title("Weighted Correlation")
 
+    return weighted_corr
 
-def assets_history_perc(operations, filename=""):
-    position_data = get_position_data(operations)
+
+def assets_history_perc(history, filename=""):
+    position_data = history
     dataframes = pd.DataFrame()
     for key, value in position_data.items():
         if dataframes.empty:
@@ -216,7 +219,33 @@ def assets_history_perc(operations, filename=""):
     plt.xlabel("Date")
     plt.title("Assets History")
     return dataframes_melt
+def assets_volatility_perc(assets_history, percentage):
+    volatility = dict()
+    for key, value in percentage.items():
+        volatility[key] = assets_history[assets_history['a'] == key]['b'].std()
+    volatility_perc = dict()
+    for key, value in volatility.items():
+        volatility_perc[key] = value / percentage[key] * 100
+    # sort
+    volatility_perc = dict(sorted(volatility_perc.items(), key=lambda item: item[1], reverse=True))
+    plt.figure("Volatility % - " + f.name)
+    sns.barplot(x=list(volatility_perc.keys()), y=list(volatility_perc.values()))
+    plt.ylabel("Volatility %")
+    plt.xlabel("Ticker")
+    plt.title("Volatility %")
+    return volatility_perc
 
+
+def weigted_correlation_volatility(f, weighted_corr, assets_vola_perc):
+    for key, value in weighted_corr.items():
+        weighted_corr[key] = weighted_corr[key] * assets_vola_perc[key] /100
+
+    plt.figure("Weighted Correlation * Volatility % - " + f.name)
+    sns.heatmap(weighted_corr, annot=True, linewidths=0.5,
+                    cmap='coolwarm', fmt=".4f")
+    plt.ylabel("Ticker")
+    plt.xlabel("Ticker")
+    plt.title("Weighted Correlation * Volatility %")
 
 if __name__ == "__main__":
 
@@ -237,12 +266,20 @@ if __name__ == "__main__":
 
         corr = correlation(operations, f.name)
         percentage = invested_pie(operations, f.name)
-        calculate_weighted_correlation(f, corr, percentage)
-        portfolio_history(operations, f.name)
+        weighted_corr = calculate_weighted_correlation(f, corr, percentage)
+        history = portfolio_history(operations, f.name)
         portfolio_gains(operations, f.name)
         current_assets_gain_loss_perc(operations, f.name)
-        assets_history = assets_history_perc(operations, f.name)
-        print(assets_history)
+        assets_history = assets_history_perc(history, f.name)
+        assets_vola_perc = assets_volatility_perc(assets_history, percentage)
+
+        weigted_correlation_volatility(f, weighted_corr, assets_vola_perc)
+        
+
+
+
+
+
 
     plt.show(block=False)
 
