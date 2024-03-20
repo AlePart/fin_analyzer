@@ -1,6 +1,6 @@
 # Contributors
 
-# This project exists thanks to all the people who contribute. [[Contribute](CONTRIBUTING.md)]
+# This project exists thanks to all the people who contribute. [[Contribute](Contributing.md)]
 
 ## List of Contributors
 
