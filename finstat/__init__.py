@@ -1,3 +1,3 @@
-from .FinSeries import *
-from .FinSeriesData import *
-from .Stats import *
+from .fin_series import *
+from .fin_series_data import *
+from .stats import *
