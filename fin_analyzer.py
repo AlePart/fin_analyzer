@@ -175,15 +175,15 @@ def calculate_weighted_correlation(file, corr, percentage):
     weighted_corr = corr.copy()
         
     for key, value in percentage.items():
-        weighted_corr.loc[key] = weighted_corr.loc[key] * value
-        weighted_corr.loc[:, key] = weighted_corr.loc[:, key] * value
+        weighted_corr.loc[key] = weighted_corr.loc[key] * value / 100
+        weighted_corr.loc[:, key] = weighted_corr.loc[:, key] * value / 100
      
     for key, value in percentage.items():
         
         weighted_corr.loc[key, key] =  None
 
     plt.figure("Weighted Correlation - " + file.name)
-    sns.heatmap(weighted_corr, annot=True,linewidths=0.5, cmap='coolwarm', fmt=".2f")
+    sns.heatmap(weighted_corr, annot=True,linewidths=0.5, cmap='coolwarm', fmt=".4f")
   
 
     plt.title("Weighted Correlation")
