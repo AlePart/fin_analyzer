@@ -43,11 +43,18 @@ def invested_pie(operations, filename = ""):
     for operation in operations:
         price = get_buy_or_open_price(operation)
         invested += operation["quantity"] * price
+        print("Invested in " + operation["ticker"] + ": " + str(operation["quantity"] * price))
             
 
     perc = dict()
     for operation in operations:
-        perc[operation["ticker"]] = operation["quantity"] * get_buy_or_open_price(operation) / invested * 100
+        if operation["ticker"] not in perc:
+            perc[operation["ticker"]] =  operation["quantity"] * get_buy_or_open_price(operation) 
+        else:
+            perc[operation["ticker"]] +=  operation["quantity"] * get_buy_or_open_price(operation) 
+    
+    for key, value in perc.items():
+        perc[key] = value / invested * 100
 
     plt.figure("Allocation - " + filename)
     plt.pie(perc.values(), labels=perc.keys(), autopct='%1.1f%%')
@@ -172,10 +179,13 @@ def calculate_weighted_correlation(file, corr, percentage):
         weighted_corr.loc[:, key] = weighted_corr.loc[:, key] * value
      
     for key, value in percentage.items():
-        weighted_corr.loc[key, key] =  weighted_corr.loc[key].mean()
+        
+        weighted_corr.loc[key, key] =  None
 
     plt.figure("Weighted Correlation - " + file.name)
     sns.heatmap(weighted_corr, annot=True,linewidths=0.5, cmap='coolwarm', fmt=".2f")
+  
+
     plt.title("Weighted Correlation")
 
 
