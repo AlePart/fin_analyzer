@@ -5,3 +5,4 @@
 ## List of Contributors
 
 - Alessandro Partesotti ([@partesotti](https://github.com/AlePart))
+- Riccardo Cherchi ([@riccardocherchi](https://github.com/RiccardoCherchi))

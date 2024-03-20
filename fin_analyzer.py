@@ -189,6 +189,33 @@ def calculate_weighted_correlation(file, corr, percentage):
 
     plt.title("Weighted Correlation")
 
+def assets_history_perc(operations, filename = ""):
+    position_data = get_position_data(operations)
+    dataframes = pd.DataFrame()
+    for key, value in position_data.items():
+        if dataframes.empty:
+            dataframes = pd.DataFrame({'dates': value.index, key: value.values})
+        else:
+            df_temp = pd.DataFrame({'dates': value.index, key: value.values})
+            dataframes= pd.merge(dataframes,df_temp, on='dates', how='outer')
+    
+
+    
+    
+    dataframes = dataframes.set_index('dates')
+    dataframes = dataframes.pct_change()
+    dataframes = dataframes.fillna(pd.NA)
+    dataframes = dataframes + 1
+    dataframes = dataframes.cumprod()
+    dataframes = dataframes - 1
+    dataframes = dataframes * 100
+    plt.figure("Assets History - " + filename)
+    dataframes_melt = dataframes.reset_index().melt('dates', var_name='a', value_name='b')
+    sns.lineplot(data=dataframes_melt, x='dates', y='b', hue='a')
+    plt.ylabel("Gains (%)")
+    plt.xlabel("Date")
+    plt.title("Assets History")
+    return dataframes_melt
 
 if __name__ == "__main__":
 
@@ -207,13 +234,14 @@ if __name__ == "__main__":
             if check_operations(operations) == False:
                 exit(1)
 
-            corr = correlation(operations, f.name)
+        corr = correlation(operations, file.name)
+        percentage = invested_pie(operations, file.name)
+        calculate_weighted_correlation(file, corr, percentage)
+        portfolio_history(operations, file.name)
+        portfolio_gains(operations, file.name)
+        current_assets_gain_loss_perc(operations, file.name)
+        assets_history = assets_history_perc(operations, file.name)
 
-            percentage = invested_pie(operations, f.name)
-            calculate_weighted_correlation(f, corr, percentage)
-            portfolio_history(operations, f.name)
-            portfolio_gains(operations, f.name)
-            current_assets_gain_loss_perc(operations, f.name)
 
     plt.show(block=False)
 

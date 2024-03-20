@@ -26,13 +26,13 @@
     {
         "ticker": "SGLD.MI",
         "adj_close": true,
-        "quantity": 10,
+        "quantity": 30,
         "date": "2022-01-04"
     },
     {
         "ticker": "INAA.MI",
         "adj_close": true,
-        "quantity": 15,
+        "quantity": 10,
         "date": "2023-01-14"
     }
    
