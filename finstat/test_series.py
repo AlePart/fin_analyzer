@@ -1,6 +1,7 @@
 import unittest
-import finstat.FinSeries as s
+import finstat.fin_series as s
 import datetime as dt
+
 
 class TestSeries(unittest.TestCase):
     def test_series_add(self):
@@ -11,11 +12,12 @@ class TestSeries(unittest.TestCase):
             now = dt.datetime.now()
             now = now - dt.timedelta(days=j)
             data.add(now,  j)
-          
+
         ser.addData(data)
         d = ser.getData()[0]
         self.assertEqual(len(d.dates), 10)
         self.assertEqual(len(d.values), 10)
+
 
 if __name__ == '__main__':
     unittest.main()
