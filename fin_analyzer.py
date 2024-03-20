@@ -184,6 +184,8 @@ def calculate_weighted_correlation(file, corr, percentage):
 
     plt.figure("Weighted Correlation - " + file.name)
     sns.heatmap(weighted_corr, annot=True,linewidths=0.5, cmap='coolwarm', fmt=".4f")
+    plt.ylabel("Ticker")
+    plt.xlabel("Ticker")
   
 
     plt.title("Weighted Correlation")
