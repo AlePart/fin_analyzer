@@ -12,7 +12,13 @@ from finstat import settings
 from finstat import stats
 
 
+<<<<<<< HEAD
 def correlation(operations: json, filename=""):
+=======
+
+
+def correlation(operations : json, filename = ""):
+>>>>>>> origin/main
     all_data = dict()
     for operation in operations:
         all_data[operation["ticker"]] = yf.download(operation["ticker"])
@@ -30,7 +36,11 @@ def correlation(operations: json, filename=""):
             data1.add(index.date(), row["Adj Close"])
         ser.addData(data1)
 
+<<<<<<< HEAD
     stats.corr(ser.getData(), filename)
+=======
+    return Stats.corr(ser.getData(), filename)
+>>>>>>> origin/main
 
 
 def invested_pie(operations, filename=""):
@@ -39,15 +49,31 @@ def invested_pie(operations, filename=""):
     for operation in operations:
         price = get_buy_or_open_price(operation)
         invested += operation["quantity"] * price
+<<<<<<< HEAD
 
     perc = dict()
     for operation in operations:
         perc[operation["ticker"]] = operation["quantity"] * \
             get_buy_or_open_price(operation) / invested * 100
+=======
+        print("Invested in " + operation["ticker"] + ": " + str(operation["quantity"] * price))
+            
+
+    perc = dict()
+    for operation in operations:
+        if operation["ticker"] not in perc:
+            perc[operation["ticker"]] =  operation["quantity"] * get_buy_or_open_price(operation) 
+        else:
+            perc[operation["ticker"]] +=  operation["quantity"] * get_buy_or_open_price(operation) 
+    
+    for key, value in perc.items():
+        perc[key] = value / invested * 100
+>>>>>>> origin/main
 
     plt.figure("Allocation - " + filename)
     plt.pie(perc.values(), labels=perc.keys(), autopct='%1.1f%%')
     plt.title("Allocation")
+    return perc
 
 
 def get_buy_or_open_price(operation):
@@ -158,6 +184,29 @@ def current_assets_gain_loss_perc(operations, filename=""):
     plt.ylabel("Gain/Loss")
     plt.xlabel("Ticker")
     plt.title("Current Assets Gain/Loss")
+<<<<<<< HEAD
+=======
+    
+def calculate_weighted_correlation(file, corr, percentage):
+    weighted_corr = corr.copy()
+        
+    for key, value in percentage.items():
+        weighted_corr.loc[key] = weighted_corr.loc[key] * value / 100
+        weighted_corr.loc[:, key] = weighted_corr.loc[:, key] * value / 100
+     
+    for key, value in percentage.items():
+        
+        weighted_corr.loc[key, key] =  None
+
+    plt.figure("Weighted Correlation - " + file.name)
+    sns.heatmap(weighted_corr, annot=True,linewidths=0.5, cmap='coolwarm', fmt=".4f")
+    plt.ylabel("Ticker")
+    plt.xlabel("Ticker")
+  
+
+    plt.title("Weighted Correlation")
+
+>>>>>>> origin/main
 
 
 if __name__ == "__main__":
@@ -177,11 +226,21 @@ if __name__ == "__main__":
             if check_operations(operations) == False:
                 exit(1)
 
+<<<<<<< HEAD
             correlation(operations, f.name)
             invested_pie(operations, f.name)
             portfolio_history(operations, f.name)
             portfolio_gains(operations, f.name)
             current_assets_gain_loss_perc(operations, f.name)
+=======
+        corr = correlation(operations, file.name)
+    
+        percentage = invested_pie(operations, file.name)
+        calculate_weighted_correlation(file, corr, percentage)
+        portfolio_history(operations, file.name)
+        portfolio_gains(operations, file.name)
+        current_assets_gain_loss_perc(operations, file.name)
+>>>>>>> origin/main
 
     plt.show(block=False)
 

@@ -14,7 +14,7 @@
     {
         "ticker": "INAA.MI",
         "adj_close": true,
-        "quantity": 20,
+        "quantity": 2,
         "date": "2022-01-04"
     },
     {
@@ -22,12 +22,6 @@
         "adj_close": true,
         "quantity": 30,
         "date": "2022-01-04"
-    },
-    {
-        "ticker": "INAA.MI",
-        "adj_close": true,
-        "quantity": 5,
-        "date": "2022-06-06"
     },
     {
         "ticker": "SGLD.MI",
