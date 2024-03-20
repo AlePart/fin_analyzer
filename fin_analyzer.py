@@ -97,6 +97,7 @@ def portfolio_gains(operations, filename=""):
     plt.ylabel("Gains (%)")
     plt.xlabel("Date")
     plt.title("Portfolio Gains")
+    return dataframes
 
 
 def get_position_data(operations):
@@ -179,7 +180,6 @@ def calculate_weighted_correlation(file, corr, percentage):
         weighted_corr.loc[:, key] = weighted_corr.loc[:, key] * value / 100
 
     for key, value in percentage.items():
-
         weighted_corr.loc[key, key] = None
 
     plt.figure("Weighted Correlation - " + file.name)
@@ -189,6 +189,38 @@ def calculate_weighted_correlation(file, corr, percentage):
     plt.xlabel("Ticker")
 
     plt.title("Weighted Correlation")
+
+    return weighted_corr
+
+def calculate_weighted_correlation_gain_loss(file, weigted_corr, gain_loss):
+    wc = weigted_corr.copy()
+    # selet last line in gain_loss DataFrame
+    
+    gl = gain_loss.copy().loc[[gain_loss.index[-1]]]
+    
+    #W weighted corr find NaN and replace with 0
+    wc = wc.fillna(0)
+
+    #all gl values must be translated to positive 
+    gl = gl + 100
+
+
+
+    for key, value in gl.iloc[0].items():
+        wc.loc[key] = wc.loc[key] * value
+        wc.loc[:, key] = wc.loc[:, key] * value 
+    
+    for key, value in gl.items():
+        wc.loc[key, key] = None
+    
+
+    
+    plt.figure("Weighted Correlation Gain Loss - " + file.name)
+    sns.heatmap(wc, annot=True, linewidths=0.5, fmt=".2f", cmap='PiYG')
+    plt.ylabel("Ticker")
+    plt.xlabel("Ticker")
+
+    plt.title("Weighted Correlation * Gain/Loss %")
 
     return weighted_corr
 
@@ -273,12 +305,13 @@ if __name__ == "__main__":
         percentage = invested_pie(operations, f.name)
         weighted_corr = calculate_weighted_correlation(f, corr, percentage)
         history = portfolio_history(operations, f.name)
-        portfolio_gains(operations, f.name)
+        gain_loss = portfolio_gains(operations, f.name)
         current_assets_gain_loss_perc(operations, f.name)
         assets_history = assets_history_perc(history, f.name)
         assets_vola_perc = assets_volatility_perc(assets_history, percentage)
 
         weigted_correlation_volatility(f, weighted_corr, assets_vola_perc)
+        weighted_corr_gain_loss = calculate_weighted_correlation_gain_loss(f, weighted_corr, gain_loss )
 
     plt.show(block=False)
 
