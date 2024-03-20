@@ -45,7 +45,7 @@ Benvenuto nel progetto FIN ANALYZER ! Siamo felici che tu voglia contribuire. Se
 
 - [Documentazione di GitHub sulle pull request](https://docs.github.com/it/github/collaborating-with-issues-and-pull-requests/about-pull-requests)
 
-Grazie per il tuo contributo! Apprezziamo il tuo impegno nel migliorare [Nome del progetto].
+Grazie per il tuo contributo! Apprezziamo il tuo impegno.
 
 ## Ringraziamenti
 Come ringraziamento sarai nominato nella pagina dei contributors del progetto.
