@@ -219,6 +219,8 @@ def assets_history_perc(history, filename=""):
     plt.xlabel("Date")
     plt.title("Assets History")
     return dataframes_melt
+
+
 def assets_volatility_perc(assets_history, percentage):
     volatility = dict()
     for key, value in percentage.items():
@@ -227,9 +229,11 @@ def assets_volatility_perc(assets_history, percentage):
     for key, value in volatility.items():
         volatility_perc[key] = value / percentage[key] * 100
     # sort
-    volatility_perc = dict(sorted(volatility_perc.items(), key=lambda item: item[1], reverse=True))
+    volatility_perc = dict(
+        sorted(volatility_perc.items(), key=lambda item: item[1], reverse=True))
     plt.figure("Volatility % - " + f.name)
-    sns.barplot(x=list(volatility_perc.keys()), y=list(volatility_perc.values()))
+    sns.barplot(x=list(volatility_perc.keys()),
+                y=list(volatility_perc.values()))
     plt.ylabel("Volatility %")
     plt.xlabel("Ticker")
     plt.title("Volatility %")
@@ -238,14 +242,15 @@ def assets_volatility_perc(assets_history, percentage):
 
 def weigted_correlation_volatility(f, weighted_corr, assets_vola_perc):
     for key, value in weighted_corr.items():
-        weighted_corr[key] = weighted_corr[key] * assets_vola_perc[key] /100
+        weighted_corr[key] = weighted_corr[key] * assets_vola_perc[key] / 100
 
     plt.figure("Weighted Correlation * Volatility % - " + f.name)
     sns.heatmap(weighted_corr, annot=True, linewidths=0.5,
-                    cmap='coolwarm', fmt=".4f")
+                cmap='coolwarm', fmt=".4f")
     plt.ylabel("Ticker")
     plt.xlabel("Ticker")
     plt.title("Weighted Correlation * Volatility %")
+
 
 if __name__ == "__main__":
 
@@ -274,12 +279,6 @@ if __name__ == "__main__":
         assets_vola_perc = assets_volatility_perc(assets_history, percentage)
 
         weigted_correlation_volatility(f, weighted_corr, assets_vola_perc)
-        
-
-
-
-
-
 
     plt.show(block=False)
 
