@@ -302,6 +302,7 @@ if __name__ == "__main__":
             for operation in operations:
                 repo.fetch(operation["ticker"])
 
+
         corr = correlation(operations, repo, f.name)
         percentage = invested_pie(operations, repo,   f.name)
         weighted_corr = calculate_weighted_correlation(f, corr, percentage)

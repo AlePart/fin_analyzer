@@ -15,6 +15,12 @@ class DataRepositoryInterface:
     def get_data(self, ticker):
         pass
 
+    def print_data(self, ticker):
+        pass
+
+    def print_all_data(self):
+        pass
+
 
 
 class YahooFinanceRepository(DataRepositoryInterface):
@@ -41,3 +47,14 @@ class YahooFinanceRepository(DataRepositoryInterface):
         if ticker not in self.data:
             return None
         return self.data[ticker]
+    
+    def print_data(self, ticker):
+        if ticker not in self.data:
+            print(f"No data available for {ticker}")
+            return
+        print(self.data[ticker])
+    
+    def print_all_data(self):
+        for ticker in self.data:
+            print(f"Data for {ticker}")
+            print(self.data[ticker])
