@@ -1,5 +1,4 @@
 import datetime as dt
-import yfinance as yf
 import json
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -10,12 +9,15 @@ from finstat import FinSeriesData
 from finstat import FinSeries
 from finstat import settings
 from finstat import statistics
+from data_repository import YahooFinanceRepository as yfr
+from data_repository import DataRepositoryInterface
 
 
-def correlation(operations: json, filename=""):
+
+def correlation(operations: json, repository : DataRepositoryInterface,filename=""):
     all_data = dict()
     for operation in operations:
-        all_data[operation["ticker"]] = yf.download(operation["ticker"])
+        all_data[operation["ticker"]] = repository.get_data(operation["ticker"])
 
     common_start_date = dt.datetime(1970, 1, 1)
     ser = FinSeries()
@@ -33,11 +35,11 @@ def correlation(operations: json, filename=""):
     return statistics.corr(ser.getData(), filename)
 
 
-def invested_pie(operations, filename=""):
+def invested_pie(operations, repository : DataRepositoryInterface, filename=""):
     invested = 0
 
     for operation in operations:
-        price = get_buy_or_open_price(operation)
+        price = get_buy_or_open_price(operation, repository)
         invested += operation["quantity"] * price
         print("Invested in " + operation["ticker"] +
               ": " + str(operation["quantity"] * price))
@@ -46,10 +48,10 @@ def invested_pie(operations, filename=""):
     for operation in operations:
         if operation["ticker"] not in perc:
             perc[operation["ticker"]] = operation["quantity"] * \
-                get_buy_or_open_price(operation)
+                get_buy_or_open_price(operation,repository)
         else:
             perc[operation["ticker"]] += operation["quantity"] * \
-                get_buy_or_open_price(operation)
+                get_buy_or_open_price(operation,repository)
 
     for key, value in perc.items():
         perc[key] = value / invested * 100
@@ -60,20 +62,20 @@ def invested_pie(operations, filename=""):
     return perc
 
 
-def get_buy_or_open_price(operation):
+def get_buy_or_open_price(operation, repository : DataRepositoryInterface):
     if "price" in operation:
         return operation["price"]
     else:
 
-        market_data = yf.download(operation["ticker"], start=operation["date"], end=dt.date.fromisoformat(
-            operation['date']) + dt.timedelta(days=30))
+        #market_data = yf.download(operation["ticker"], start=operation["date"], end=dt.date.fromisoformat(operation['date']) + dt.timedelta(days=30))
+        market_data = repository.get_data_from_date_range(operation["ticker"], operation["date"], dt.date.fromisoformat(operation['date']) + dt.timedelta(days=30))
 
         return market_data["Open"].iloc[0]
 
 
-def portfolio_gains(operations, filename=""):
+def portfolio_gains(operations, repository : DataRepositoryInterface,filename=""):
 
-    position_data = get_position_data(operations)
+    position_data = get_position_data(operations, repository)
 
     dataframes = pd.DataFrame()
     for key, value in position_data.items():
@@ -100,11 +102,10 @@ def portfolio_gains(operations, filename=""):
     return dataframes
 
 
-def get_position_data(operations):
+def get_position_data(operations, repository : DataRepositoryInterface):
     position_data = dict()
     for operation in operations:
-        market_data = yf.download(
-            operation["ticker"], start=operation["date"], end=dt.datetime.now() - dt.timedelta(days=1))
+        market_data = repository.get_data_from_date_range(operation["ticker"], operation["date"], dt.datetime.now() - dt.timedelta(days=1))
 
         if operation["adj_close"] == True:
             position_data[operation["ticker"]
@@ -120,8 +121,8 @@ def get_position_data(operations):
     return position_data
 
 
-def portfolio_history(operations, filename=""):
-    position_data = get_position_data(operations)
+def portfolio_history(operations, repository : DataRepositoryInterface, filename=""):
+    position_data = get_position_data(operations, repository)
     dataframes = pd.DataFrame()
 
     for key, value in position_data.items():
@@ -153,17 +154,16 @@ def check_operations(operations: list[dict]) -> bool:
     return True
 
 
-def current_assets_gain_loss_perc(operations, filename=""):
+def current_assets_gain_loss_perc(operations,repository : DataRepositoryInterface, filename=""):
     gain_loss = dict()
     for operation in operations:
-        market_data = yf.download(
-            operation["ticker"], start=operation["date"], end=dt.datetime.now() - dt.timedelta(days=1))
+        market_data = repository.get_data_from_date_range(operation["ticker"], operation["date"], dt.datetime.now() - dt.timedelta(days=1))
         if operation["adj_close"] == True:
             gain_loss[operation["ticker"]] = (
-                market_data["Adj Close"].iloc[-1] - get_buy_or_open_price(operation)) / get_buy_or_open_price(operation) * 100
+                market_data["Adj Close"].iloc[-1] - get_buy_or_open_price(operation,repository)) / get_buy_or_open_price(operation,repository) * 100
         else:
             gain_loss[operation["ticker"]] = (
-                market_data["Close"].iloc[-1] - get_buy_or_open_price(operation)) / get_buy_or_open_price(operation) * 100
+                market_data["Close"].iloc[-1] - get_buy_or_open_price(operation,repository)) / get_buy_or_open_price(operation, repository) * 100
 
     plt.figure("Current Assets Gain/Loss - " + filename)
     sns.barplot(x=list(gain_loss.keys()), y=list(gain_loss.values()))
@@ -287,6 +287,7 @@ def weigted_correlation_volatility(f, weighted_corr, assets_vola_perc):
 if __name__ == "__main__":
 
     operations_files = []
+    repo = yfr()
     if len(sys.argv) > 1:
         for arg in sys.argv[1:]:
 
@@ -300,13 +301,16 @@ if __name__ == "__main__":
             operations = json.load(f)
             if check_operations(operations) == False:
                 exit(1)
+            
+            for operation in operations:
+                repo.fetch(operation["ticker"])
 
-        corr = correlation(operations, f.name)
-        percentage = invested_pie(operations, f.name)
+        corr = correlation(operations, repo, f.name)
+        percentage = invested_pie(operations, repo,   f.name)
         weighted_corr = calculate_weighted_correlation(f, corr, percentage)
-        history = portfolio_history(operations, f.name)
-        gain_loss = portfolio_gains(operations, f.name)
-        current_assets_gain_loss_perc(operations, f.name)
+        history = portfolio_history(operations,repo, f.name)
+        gain_loss = portfolio_gains(operations,repo, f.name)
+        current_assets_gain_loss_perc(operations,repo, f.name)
         assets_history = assets_history_perc(history, f.name)
         assets_vola_perc = assets_volatility_perc(assets_history, percentage)
 
