@@ -24,6 +24,7 @@ class YahooFinanceRepository(DataRepositoryInterface):
 
     def fetch(self, ticker):
         if ticker not in self.data:
+            print(f"Fetching data for {ticker}")
             self.data[ticker] = yf.download(ticker)
     
     def get_data_from_date(self, ticker, date : date):
