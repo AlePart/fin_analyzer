@@ -41,9 +41,6 @@ def invested_pie(operations, repository : DataRepositoryInterface, filename=""):
     for operation in operations:
         price = get_buy_or_open_price(operation, repository)
         invested += operation["quantity"] * price
-        print("Invested in " + operation["ticker"] +
-              ": " + str(operation["quantity"] * price))
-
     perc = dict()
     for operation in operations:
         if operation["ticker"] not in perc:
